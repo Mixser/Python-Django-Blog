@@ -1,0 +1,24 @@
+{% extends 'Jiga/application_layout.html' %}
+
+
+{% block content %}
+    <h2> content </h2>
+    {% if last_recently_posts %}
+        <table class="table">
+            <thead>
+                <td>#</td>
+                <td>Title</td>
+                <td>Pub date</td>
+                <td>Link to</td>
+            </thead>
+            {% for post in last_recently_posts %}
+                <tr>
+                    <td> {{ forloop.counter }}</td>
+                    <td> {{ post.post_title }}</td>
+                    <td> {{  post.pub_date  }}</td>
+                    <td> <a href="{% url 'jiga:post' post.id %}">Go to</a> </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

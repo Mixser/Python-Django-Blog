@@ -1,0 +1,10 @@
+{% extends 'Jiga/application_layout.html' %}
+
+{% block content %}
+    {{ error_message }}
+    <form method="post" action="{% url 'jiga:login' %}" >
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'Jiga/application_layout.html' %}
+
+{% block content %}
+    <p>
+        {{ user_.first_name }} {{ user_.last_name }}
+        {% if user == user_ %}
+            <a href="{% url 'jiga:edit_profile' %}"> Edit </a>
+        {% endif %}
+    </p>
+    <table class="table">
+        <thead>
+            <td>#</td>
+            <td>Title</td>
+            <td>Date of pub</td>
+            <td>Link to</td>
+        </thead>
+        {% for post in user_.post_set.all %}
+            <tr>
+                <td> {{ forloop.counter }}</td>
+                <td> {{ post.post_title }}</td>
+                <td> {{  post.pub_date  }}</td>
+                <td> <a href='{% url 'jiga:post' post.id %}'> Go to </a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

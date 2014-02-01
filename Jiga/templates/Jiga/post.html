@@ -1,0 +1,42 @@
+{% extends 'Jiga/application_layout.html' %}
+
+{% block content %}
+    <h2> {{ post.post_title }} -- {{ post.user.first_name }} {{ post.user.last_name }}</h2>
+    {% if user == post.user %}
+        <a href="{% url 'jiga:edit_post' post.id %}">Edit post</a>
+    {% endif %}
+    <p> </p>
+    <div id="post_text" class="well">
+        {{ post.post_text }}
+    </div>
+    <style>
+        .comment {
+            border: dashed #080808;
+            margin: 10px 10px 10px 10px;
+        }
+        #comment_set {
+            border:  solid #269abc;
+
+        }
+    </style>
+    <div id="comment_set">
+        {% for comment in post.comment_set.all %}
+            <div class="comment">
+                <p>{{ comment.comment_title }} -- {{ comment.user.first_name }} {{ comment.user.last_name }} | {{ comment.pub_date }}</p>
+                    {{ comment.comment_text }}
+            </div>
+        {% endfor %}
+    </div>
+    <br /> <br/>
+    {% if user.is_authenticated  %}
+    <div id="add_comment">
+        <form method="post" action="{% url 'jiga:create_comment' post.id %}">
+            {% csrf_token %}
+            <input type="text" name="comment_title" id="comment_title"> <br /><br />
+            <textarea name="comment_text" id="'comment_title"></textarea> <br /> <br />
+            <input type="submit" value="Add comment"/>
+        </form>
+    </div>
+    {% endif %}
+
+{% endblock %}
