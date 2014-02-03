@@ -95,8 +95,9 @@ def register(request):
             email = form.cleaned_data['email']
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
-            user = User(username=username, password=password, email=email,
+            user = User(username=username, email=email,
                         first_name=first_name, last_name=last_name)
+            user.set_password(password)
             try:
                 user.save()   # TODO: validate for multiply user
             except IntegrityError:
@@ -110,7 +111,11 @@ def register(request):
 
 def profile(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    return render(request, 'Jiga/profile.html', {'user_': user})
+    if user == request.user:
+        posts = user.post_set.all().order_by('-pub_date')
+    else:
+        posts = user.post_set.all().filter(pub_date__lte=timezone.now()).order_by('-pub_date')
+    return render(request, 'Jiga/profile.html', {'user_for_viewing': user, 'posts': posts})
 
 @login_required
 def edit_profile(request):
