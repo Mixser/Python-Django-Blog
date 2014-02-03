@@ -8,8 +8,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from Jiga.forms.comment import CommentForm
 from Jiga.forms.edit_user_profile import EditProfileForm
-
 from Jiga.forms.login import LoginForm
 from Jiga.forms.post import PostForm
 from Jiga.forms.registration import RegistrationForm
@@ -22,26 +22,27 @@ def index(request):
 
 
 def post(request, post_id):
-    _post = get_object_or_404(Post, pk=post_id)
-    return render(request, 'Jiga/post.html', {'post': _post})
+    post = get_object_or_404(Post, pk=post_id)
+    form = CommentForm()
+    return render(request, 'Jiga/post.html', {'post': post, 'form': form})
 
 
 @login_required
 def edit_post(request, post_id):
-    _post = get_object_or_404(Post, pk=post_id)
-    if _post.user != request.user:
+    post = get_object_or_404(Post, pk=post_id)
+    if post.user != request.user:
         return HttpResponseRedirect(reverse('jiga:index'))
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            _post.post_title = request.POST['post_title']
-            _post.post_text = request.POST['post_text']
-            _post.pub_date = request.POST['pub_date']
-            _post.save()
-            return HttpResponseRedirect(reverse('jiga:post', args=(_post.id,)))
+            post.post_title = form.cleaned_data['post_title']
+            post.post_text = form.cleaned_data['post_text']
+            post.pub_date = form.cleaned_data['pub_date']
+            post.save()
+            return HttpResponseRedirect(reverse('jiga:post', args=(post.id,)))
 
     else:
-        form = PostForm(_post.get_date())
+        form = PostForm(post.get_dict())
         form['pub_date'].css_classes('datepicker')
     return render(request, 'Jiga/post_form.html', {'form': form})
 
@@ -89,11 +90,11 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-            email = request.POST['email']
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            email = form.cleaned_data['email']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
             user = User(username=username, password=password, email=email,
                         first_name=first_name, last_name=last_name)
             try:
@@ -113,30 +114,32 @@ def profile(request, user_id):
 
 @login_required
 def edit_profile(request):
-    _user = request.user
+    user = request.user
     if request.method == 'POST':
         form = EditProfileForm(request.POST)
         if form.is_valid():
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
-            _user.first_name = first_name
-            _user.last_name = last_name
-            _user.save()
-            return HttpResponseRedirect(reverse('jiga:profile', args=(_user.id, )))
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            return HttpResponseRedirect(reverse('jiga:profile', args=(user.id, )))
     else:
-        form = EditProfileForm({'first_name': _user.first_name, 'last_name': _user.last_name})
+        form = EditProfileForm({'first_name': user.first_name, 'last_name': user.last_name})
     return render(request, 'Jiga/edit_user_profile.html', {'form': form})
 
 
 
 @login_required
 def create_comment(request, post_id):
-    _post = get_object_or_404(Post, pk=post_id)
-    _user = request.user
+    post = get_object_or_404(Post, pk=post_id)
+    user = request.user
     if request.method == 'POST':
-        comment = Comment(comment_title=request.POST['comment_title'],
-                          comment_text=request.POST['comment_text'],
-                          post=_post, user=_user,
-                          pub_date=timezone.now())
-        comment.save()
-    return HttpResponseRedirect(reverse('jiga:post', args=(_post.id, ) ))
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment_title = form.cleaned_data['comment_title']
+            comment_text = form.cleaned_data['comment_text']
+            comment = Comment(comment_title=comment_title, comment_text=comment_text,
+                              user=user, post=post,pub_date=timezone.now())
+            comment.save()
+    return HttpResponseRedirect(reverse('jiga:post', args=(post.id, ) ))
