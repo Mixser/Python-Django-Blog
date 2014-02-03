@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'Jiga',
+    'jiga',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,9 +49,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'Blog.urls'
+ROOT_URLCONF = 'blog.urls'
 
-WSGI_APPLICATION = 'Blog.wsgi.application'
+WSGI_APPLICATION = 'blog.wsgi.application'
 
 
 # Database

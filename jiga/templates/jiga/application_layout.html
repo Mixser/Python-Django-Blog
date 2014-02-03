@@ -6,8 +6,8 @@
     <title>{{ title }}</title>
     {% load staticfiles %}
     <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-    <link type="text/css" rel="stylesheet" href="{% static 'Jiga/css/bootstrap.css' %}">
-    <link type="text/css" rel="stylesheet" href="{% static 'Jiga/css/timepicker.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'jiga/css/bootstrap.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'jiga/css/timepicker.css' %}">
     <style>
         body {
             padding-top: 50px;
@@ -16,7 +16,7 @@
 
 </head>
 <body>
-    {% include 'Jiga/header.html' %}
+    {% include 'jiga/header.html' %}
 
     <div class="container">
         {% block content %}
@@ -27,8 +27,8 @@
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
-    <script src="{% static 'Jiga/js/bootstrap.js' %}"></script>
-    <script src="{% static 'Jiga/js/timepicker.js' %}"></script>
+    <script src="{% static 'jiga/js/bootstrap.js' %}"></script>
+    <script src="{% static 'jiga/js/timepicker.js' %}"></script>
     {% block scripts %} {% endblock %}
 
 </body>

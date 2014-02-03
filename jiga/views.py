@@ -8,23 +8,23 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from Jiga.forms.comment import CommentForm
-from Jiga.forms.edit_user_profile import EditProfileForm
-from Jiga.forms.login import LoginForm
-from Jiga.forms.post import PostForm
-from Jiga.forms.registration import RegistrationForm
-from Jiga.models import Post, Comment
+from jiga.forms.comment import CommentForm
+from jiga.forms.edit_user_profile import EditProfileForm
+from jiga.forms.login import LoginForm
+from jiga.forms.post import PostForm
+from jiga.forms.registration import RegistrationForm
+from jiga.models import Post, Comment
 
 
 def index(request):
     last_recently_posts = Post.objects.all().filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
-    return render(request, 'Jiga/index.html', {'last_recently_posts': last_recently_posts})
+    return render(request, 'jiga/index.html', {'last_recently_posts': last_recently_posts})
 
 
 def post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     form = CommentForm()
-    return render(request, 'Jiga/post.html', {'post': post, 'form': form})
+    return render(request, 'jiga/post.html', {'post': post, 'form': form})
 
 
 @login_required
@@ -44,7 +44,7 @@ def edit_post(request, post_id):
     else:
         form = PostForm(post.get_dict())
         form['pub_date'].css_classes('datepicker')
-    return render(request, 'Jiga/post_form.html', {'form': form})
+    return render(request, 'jiga/post_form.html', {'form': form})
 
 
 @login_required
@@ -61,7 +61,7 @@ def create_post(request):
             return HttpResponseRedirect(reverse('jiga:post', args=(_post.id, )))
     else:
         form = PostForm()
-    return render(request, 'Jiga/post_form.html', {'form': form})
+    return render(request, 'jiga/post_form.html', {'form': form})
 
 
 def login(request):
@@ -75,10 +75,10 @@ def login(request):
                 _login(request, user)
                 return HttpResponseRedirect(reverse('jiga:profile', args=(user.id,)))
             else:
-                    return render(request, 'Jiga/login.html', {'form': form})
+                    return render(request, 'jiga/login.html', {'form': form})
     else:
         form = LoginForm()
-    return render(request, 'Jiga/login.html', {'form': form})
+    return render(request, 'jiga/login.html', {'form': form})
 
 
 def logout(request):
@@ -101,12 +101,12 @@ def register(request):
             try:
                 user.save()   # TODO: validate for multiply user
             except IntegrityError:
-                return render(request, 'Jiga/registration.html',
+                return render(request, 'jiga/registration.html',
                               {'form': form, 'error_message': 'A user with this name already exists'})
             return HttpResponseRedirect(reverse('jiga:profile', args=(user.id,)))
     else:
         form = RegistrationForm()
-    return render(request, 'Jiga/registration.html', {'form': form})
+    return render(request, 'jiga/registration.html', {'form': form})
 
 
 def profile(request, user_id):
@@ -115,7 +115,7 @@ def profile(request, user_id):
         posts = user.post_set.all().order_by('-pub_date')
     else:
         posts = user.post_set.all().filter(pub_date__lte=timezone.now()).order_by('-pub_date')
-    return render(request, 'Jiga/profile.html', {'user_for_viewing': user, 'posts': posts})
+    return render(request, 'jiga/profile.html', {'user_for_viewing': user, 'posts': posts})
 
 @login_required
 def edit_profile(request):
@@ -131,7 +131,7 @@ def edit_profile(request):
             return HttpResponseRedirect(reverse('jiga:profile', args=(user.id, )))
     else:
         form = EditProfileForm({'first_name': user.first_name, 'last_name': user.last_name})
-    return render(request, 'Jiga/edit_user_profile.html', {'form': form})
+    return render(request, 'jiga/edit_user_profile.html', {'form': form})
 
 
 
