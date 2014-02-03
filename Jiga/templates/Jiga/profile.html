@@ -2,8 +2,8 @@
 
 {% block content %}
     <p>
-        {{ user_.first_name }} {{ user_.last_name }}
-        {% if user == user_ %}
+        {{ user_for_viewing.first_name }} {{ user_for_viewing.last_name }}
+        {% if user == user_for_viewing %}
             <a href="{% url 'jiga:edit_profile' %}"> Edit </a>
         {% endif %}
     </p>
@@ -14,7 +14,7 @@
             <td>Date of pub</td>
             <td>Link to</td>
         </thead>
-        {% for post in user_.post_set.all %}
+        {% for post in posts %}
             <tr>
                 <td> {{ forloop.counter }}</td>
                 <td> {{ post.post_title }}</td>
