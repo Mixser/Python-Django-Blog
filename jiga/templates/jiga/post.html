@@ -32,7 +32,7 @@
     <div id="add_comment">
         <form method="post" action="{% url 'jiga:create_comment' post.id %}">
             {% csrf_token %}
-            {{ form }}
+            {{ form.as_p }}
             <input type="submit" value="Add comment" />
         </form>
     </div>
