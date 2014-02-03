@@ -32,9 +32,8 @@
     <div id="add_comment">
         <form method="post" action="{% url 'jiga:create_comment' post.id %}">
             {% csrf_token %}
-            <input type="text" name="comment_title" id="comment_title"> <br /><br />
-            <textarea name="comment_text" id="'comment_title"></textarea> <br /> <br />
-            <input type="submit" value="Add comment"/>
+            {{ form }}
+            <input type="submit" value="Add comment" />
         </form>
     </div>
     {% endif %}
