@@ -17,7 +17,7 @@ class Post(models.Model):
         now = timezone.now()
         return now > self.pub_date >= timezone.now() - datetime.timedelta(days=1)
 
-    def get_date(self):
+    def get_dict(self):
         return {'post_title': self.post_title,
                 'post_text': self.post_text,
                 'pub_date': self.pub_date
