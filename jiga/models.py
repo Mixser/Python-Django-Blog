@@ -27,9 +27,17 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post)
     user = models.ForeignKey(User)
-    comment_title = models.CharField(max_length=255)
+    comment_title = models.CharField(max_length=255, default='')
     comment_text = models.TextField()
-    pub_date = models.DateTimeField()
+    pub_date = models.DateTimeField(auto_created=True)
 
     def __str__(self):
         return self.comment_title
+
+
+class Relationship(models.Model):
+    from_user = models.ForeignKey(User, related_name='from_user')
+    to_user = models.ForeignKey(User, related_name='to_user')
+
+    class Meta:
+        unique_together = (('from_user', 'to_user'), )
