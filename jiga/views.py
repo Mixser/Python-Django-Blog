@@ -8,12 +8,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from jiga.forms.comment import CommentForm
-from jiga.forms.edit_user_profile import EditProfileForm
-from jiga.forms.login import LoginForm
-from jiga.forms.post import PostForm
-from jiga.forms.registration import RegistrationForm
-from jiga.models import Post, Comment, Relationship
+
+
+from .forms.comment import CommentForm
+from .forms.edit_user_profile import EditProfileForm
+from .forms.login import LoginForm
+from .forms.post import PostForm
+from .forms.registration import RegistrationForm
+from .models import Post, Comment, Relationship
 
 
 def index(request):
