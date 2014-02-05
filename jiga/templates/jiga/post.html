@@ -27,7 +27,7 @@
         </p>
         <div class="col-xs-12 col-sm-9">
             <div id="comment_set">
-                {% for comment in post.comment_set.all %}
+                {% for comment in post_comments %}
                 <div class="comment">
                     <p>{{ comment.comment_title }} -- {{ comment.user.first_name }}
                         {{ comment.user.last_name }} | {{ comment.pub_date }}
@@ -51,7 +51,7 @@
         <div id="sidebar" class="col-xs-6 col-sm-3 sidebar-offcanvas" rove="navigation">
             <p>Author:</p>
             <div class="list-group">
-                <p class="list-group-item"> {{ user.first_name }} {{ user.last_name }}
+                <p class="list-group-item"> {{ post.user.first_name }} {{ post.user.last_name }}
                 {{ post.pub_date }}</p>
             </div>
         </div>
