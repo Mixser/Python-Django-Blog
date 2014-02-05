@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
-from .forms import CommentForm, EditProfileForm, LoginForm, PostForm, RegistrationForm 
+from .forms import CommentForm, EditProfileForm, LoginForm, PostForm, RegistrationForm
 from .models import Post, Comment, Relationship
 
 
@@ -20,9 +20,13 @@ def index(request):
 
 def post(request, post_id):
     post_obj = get_object_or_404(Post, pk=post_id)
+    if post_obj.pub_date > timezone.now() and request.user != post_obj.user:
+        return HttpResponseRedirect(reverse('jiga:index'))
     title = post_obj.post_title
+    post_comments = post_obj.comment_set.all().order_by('pub_date')
     form = CommentForm()
-    return render(request, 'jiga/post.html', {'post': post_obj, 'form': form, 'title': title})
+    return render(request, 'jiga/post.html', {'post': post_obj, 'form': form,
+                                              'title': title, 'post_comments':post_comments})
 
 
 @login_required
