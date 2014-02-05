@@ -1,20 +1,15 @@
 from django.contrib.auth import authenticate
-from django.contrib.auth import login as _login
-from django.contrib.auth import logout as _logout
+from django.contrib.auth import login as login_auth
+from django.contrib.auth import logout as logout_auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
-
-from .forms.comment import CommentForm
-from .forms.edit_user_profile import EditProfileForm
-from .forms.login import LoginForm
-from .forms.post import PostForm
-from .forms.registration import RegistrationForm
+from .forms import CommentForm, EditProfileForm, LoginForm, PostForm, RegistrationForm 
 from .models import Post, Comment, Relationship
 
 
@@ -74,7 +69,7 @@ def login(request):
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
             if user is not None and user.is_active:
-                _login(request, user)
+                login_auth(request, user)
                 return HttpResponseRedirect(reverse('jiga:profile', args=(user.id,)))
             else:
                 return render(request, 'jiga/login.html', {'form': form})
@@ -84,7 +79,7 @@ def login(request):
 
 
 def logout(request):
-    _logout(request)
+    logout_auth(request)
     return HttpResponseRedirect(reverse('jiga:index'))
 
 
