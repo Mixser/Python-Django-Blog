@@ -1,26 +1,75 @@
 {% extends 'jiga/application_layout.html' %}
 
 {% block content %}
-    <p>
-        {{ user_for_viewing.first_name }} {{ user_for_viewing.last_name }}
-        {% if user == user_for_viewing %}
-            <a href="{% url 'jiga:edit_profile' %}"> Edit </a>
-        {% endif %}
-    </p>
-    <table class="table">
-        <thead>
-            <td>#</td>
-            <td>Title</td>
-            <td>Date of pub</td>
-            <td>Link to</td>
-        </thead>
-        {% for post in posts %}
-            <tr>
-                <td> {{ forloop.counter }}</td>
-                <td> {{ post.post_title }}</td>
-                <td> {{  post.pub_date  }}</td>
-                <td> <a href='{% url 'jiga:post' post.id %}'> Go to </a></td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="row row-offcanvas row-offcanvas-right">
+        <p>
+        <div class="jumbotron">
+            <h1>{{ user_for_viewing.first_name }} {{ user_for_viewing.last_name }}</h1>
+            <p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap.
+                Try some responsive-range viewport sizes to see it in action.</p>
+            {% if user == user_for_viewing %}
+                <a href="{% url 'jiga:edit_profile' %}"> Edit profile </a>
+            {% elif not followed %}
+                <a href="{% url 'jiga:follow' user_for_viewing.id %}"> Follow </a>
+            {% else %}
+                <a href="{% url 'jiga:unfollow' user_for_viewing.id %}"> Unfollow </a>
+            {% endif %}
+          </div>
+        </p>
+
+        <div class="col-xs-12 col-sm-9">
+            <h2>Post's:</h2>
+            <table class="table">
+                <thead>
+                    <td>#</td>
+                    <td>Title</td>
+                    <td>Date of pub</td>
+                    <td>Link to</td>
+                </thead>
+                {% for post in posts %}
+                    <tr>
+                        <td> {{ forloop.counter }}</td>
+                        <td> {{ post.post_title }}</td>
+                        <td> {{  post.pub_date  }}</td>
+                        <td> <a href='{% url 'jiga:post' post.id %}'> Go to </a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div id="sidebar" class="col-xs-6 col-sm-3 sidebar-offcanvas" rove="navigation">
+            <p>Last comments:</p>
+            <div class="list-group">
+                {% for comment in list_recently_comments %}
+                    <a class="list-group-item" href="{% url 'jiga:post' comment.post.id %}">Post:
+                        {{ comment.post }}</a>
+                {% endfor %}
+            </div>
+            <p> Followed: </p>
+            <div class="list-group">
+                {% for relation in list_followed_user %}
+                    <a class="list-group-item" href="{% url 'jiga:profile' relation.to_user.id %}">
+                        {{ relation.to_user.first_name}} {{ relation.to_user.last_name  }} </a>
+                {% endfor %}
+
+            </div>
+            <p> Followers:</p>
+            <div class="list-group">
+                {% for relation in list_follower_user %}
+                    <a class="list-group-item" href="{% url 'jiga:profile' relation.from_user.id %}">
+                        {{ relation.from_user.first_name}} {{ relation.from_user.last_name  }} </a>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr>
+
+
+    <footer>
+            <p>&copy; Company 2014</p>
+    </footer>
+
 {% endblock %}
