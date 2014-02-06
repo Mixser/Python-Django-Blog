@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_auth
 from django.contrib.auth import logout as logout_auth
@@ -14,12 +15,18 @@ from .models import Post, Comment, Relationship
 
 
 def index(request):
-    last_recently_posts = Post.objects.all().filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+    last_recently_posts = Post.objects.all().filter(pub_date__lte=timezone.now()).order_by('-pub_date')
+    get_query = request.GET
+    if get_query:
+        since = datetime.strptime(get_query['since'],'%Y-%m-%d %H:%M')
+        to = datetime.strptime(get_query['to'],'%Y-%m-%d %H:%M')
+        last_recently_posts = Post.objects.all().filter(pub_date__gte=since, pub_date__lte=to)
     return render(request, 'jiga/index.html', {'last_recently_posts': last_recently_posts})
 
 
 def post(request, post_id):
     post_obj = get_object_or_404(Post, pk=post_id)
+
     if post_obj.pub_date > timezone.now() and request.user != post_obj.user:
         return HttpResponseRedirect(reverse('jiga:index'))
     title = post_obj.post_title

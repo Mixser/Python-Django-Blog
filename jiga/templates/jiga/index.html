@@ -1,6 +1,15 @@
 {% extends 'jiga/application_layout.html' %}
 
 
+{% block scripts %}
+    <script>
+        $(".datepicker").datetimepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    </script>
+{% endblock %}
+
+
 {% block content %}
     <h2> content </h2>
     {% if last_recently_posts %}
@@ -8,7 +17,14 @@
             <thead>
                 <td>#</td>
                 <td>Title</td>
-                <td>Pub date</td>
+                <td>
+                    <form action="{% url 'jiga:index' %}" method="get">
+                        Pub date:
+                        since:<input type="date" name="since" class="datepicker" />
+                        to:<input type="date" name="to" class="datepicker" />
+                        <input type="submit" value="Filtre">
+                    </form>
+                </td>
                 <td>Link to</td>
             </thead>
             {% for post in last_recently_posts %}
