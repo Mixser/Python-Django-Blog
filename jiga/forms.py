@@ -21,6 +21,9 @@ class PostForm(forms.Form):
     post_text = forms.CharField(widget=forms.Textarea)
     pub_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'id': 'datepicker'}))
 
+    class Media(object):
+        js = ('jiga/js/datepicker.js', )
+
 
 class RegistrationForm(forms.Form):
     username = forms.CharField()

@@ -56,7 +56,7 @@ def edit_post(request, post_id):
     else:
         form = PostForm(post_obj.get_dict())
         form['pub_date'].css_classes('datepicker')
-    return render(request, 'jiga/post_form.html', {'form': form})
+    return render(request, 'jiga/forms.html', {'form': form})
 
 
 @login_required
@@ -73,7 +73,7 @@ def create_post(request):
             return HttpResponseRedirect(reverse('jiga:post', args=(_post.id, )))
     else:
         form = PostForm()
-    return render(request, 'jiga/post_form.html', {'form': form})
+    return render(request, 'jiga/forms.html', {'form': form})
 
 
 def login(request):
@@ -87,10 +87,10 @@ def login(request):
                 login_auth(request, user)
                 return HttpResponseRedirect(reverse('jiga:profile', args=(user.id,)))
             else:
-                return render(request, 'jiga/login.html', {'form': form})
+                return render(request, 'jiga/forms.html', {'form': form})
     else:
         form = LoginForm()
-    return render(request, 'jiga/login.html', {'form': form})
+    return render(request, 'jiga/forms.html', {'form': form})
 
 
 def logout(request):
@@ -113,12 +113,12 @@ def register(request):
             try:
                 user.save()   # TODO: validate for multiply email
             except IntegrityError:
-                return render(request, 'jiga/registration.html',
+                return render(request, 'jiga/forms.html',
                               {'form': form, 'error_message': 'A user with this name already exists'})
             return HttpResponseRedirect(reverse('jiga:profile', args=(user.id,)))
     else:
         form = RegistrationForm()
-    return render(request, 'jiga/registration.html', {'form': form})
+    return render(request, 'jiga/forms.html', {'form': form})
 
 
 def profile(request, user_id):
@@ -153,7 +153,7 @@ def edit_profile(request):
             return HttpResponseRedirect(reverse('jiga:profile', args=(user.id, )))
     else:
         form = EditProfileForm({'first_name': user.first_name, 'last_name': user.last_name})
-    return render(request, 'jiga/edit_user_profile.html', {'form': form})
+    return render(request, 'jiga/forms.html', {'form': form})
 
 
 @login_required
